@@ -26,11 +26,14 @@ RUN /bin/bash -c "mineru-models-download -s huggingface -m all"
 # Install runpod
 RUN pip install --no-cache-dir runpod
 
+# Install google cloud-storage
+RUN pip install --no-cache-dir google-cloud-storage
+
 # Copy runpod handler code
 COPY runpod_handler.py /
 
 # Set the entry point to activate the virtual environment and run the command line tool
-ENTRYPOINT ["/bin/bash", "-c", "export MINERU_MODEL_SOURCE=local && exec \"$@\"", "--"]
+# ENTRYPOINT ["/bin/bash", "-c", "export MINERU_MODEL_SOURCE=local && exec \"$@\"", "--"]
 
 # Run runpod handler
-# CMD ["python3", "-u", "runpod_handler.py"]
+CMD ["python3", "-u", "runpod_handler.py"]
