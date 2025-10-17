@@ -4,6 +4,16 @@ Runs MinerU on Runpod using Docker
 
 ## Getting started
 
+### Google Cloud
+
+Go into google cloud storage
+
+Make a bucket called "runpod-temp-data"
+
+Add lifecycle setting to delete objects after one day
+
+### Docker
+
 Build docker image
 
 ```bash
@@ -21,6 +31,8 @@ Push to docker hub
 ```bash
 docker push alexcrist/mineru-runpod
 ```
+
+### Runpod
 
 Create a runpod serverless endpoint
 

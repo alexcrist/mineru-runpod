@@ -4,9 +4,9 @@ from google.cloud import storage
 from dotenv import load_dotenv
 import tempfile
 
-BUCKET = "runpod-temp-data"
 INPUT_FILE = "2021_International_Residential_Code_Chapter_3_Page_8_Images.pdf"
-ENDPOINT_ID = "your-endpoint-id"
+BUCKET = "runpod-temp-data"
+ENDPOINT_ID = os.environ.get("RUNPOD_ENDPOINT_ID")
 RUNPOD_API_KEY = os.environ.get("RUNPOD_API_KEY")
 
 # Load .env file
