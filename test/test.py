@@ -32,7 +32,7 @@ blob.upload_from_filename(INPUT_FILE)
 print("Hitting runpod endpoint...")
 runpod.api_key = RUNPOD_API_KEY
 endpoint = runpod.Endpoint(ENDPOINT_ID)
-job = endpoint.run({
+job = endpoint.run_sync({
     "input": {
         "object_path": INPUT_FILE
     }
