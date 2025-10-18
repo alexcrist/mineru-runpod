@@ -3,7 +3,7 @@ import modal
 BUCKET_NAME = "mineru-temp-data"
 
 app = modal.App("mineru-parser")
-image = modal.Image.from_registry("alexcrist/mineru-serverless:latest")
+image = modal.Image.from_dockerfile("./Dockerfile")
 
 @app.function(
     image=image,
@@ -73,6 +73,7 @@ def process_pdf(input_path: str):
         print("Cleaned up.")
 
 @app.local_entrypoint()
-def main(input_path: str):
+def main():
+    input_path = "2021_International_Residential_Code_Chapter_3_Page_8_Images.pdf"
     result = process_pdf.remote(input_path)
     print(result)

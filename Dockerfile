@@ -17,14 +17,16 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install mineru latest
-RUN python3 -m pip install -U 'mineru[core]' --break-system-packages && \
-    python3 -m pip cache purge
+RUN python3 -m pip install -U 'mineru[core]' --break-system-packages
 
 # Download models and update the configuration file
 RUN /bin/bash -c "mineru-models-download -s huggingface -m pipeline"
 
 # Install google cloud-storage
 RUN pip install --no-cache-dir google-cloud-storage
+
+# Add 'python' command (symlink to python3)
+RUN ln -s /usr/bin/python3 /usr/bin/python
 
 # Set the entry point to activate the virtual environment and run the command line tool
 ENTRYPOINT ["/bin/bash", "-c", "export MINERU_MODEL_SOURCE=local && exec \"$@\"", "--"]
