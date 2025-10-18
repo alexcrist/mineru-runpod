@@ -1,6 +1,6 @@
-# MinerU Runpod
+# MinerU Serverless
 
-Runs MinerU on Runpod using Docker
+Runs MinerU on Cloud FUnctions using Docker
 
 ## Getting started
 
@@ -8,7 +8,7 @@ Runs MinerU on Runpod using Docker
 
 Go into google cloud storage
 
-Make a bucket called "runpod-temp-data"
+Make a bucket called "mineru-temp-data"
 
 Add lifecycle setting to delete objects after one day
 
@@ -17,7 +17,7 @@ Add lifecycle setting to delete objects after one day
 Build docker image
 
 ```bash
-sudo docker build . -t alexcrist/mineru-runpod
+sudo docker build . -t alexcrist/mineru-serverless
 ```
 
 Log in to docker hub
@@ -29,12 +29,12 @@ docker login
 Push to docker hub
 
 ```bash
-docker push alexcrist/mineru-runpod
+docker push alexcrist/mineru-serverless
 ```
 
-### Runpod
+### Google Cloud Run Functions
 
-Create a runpod serverless endpoint
+Create a Google Cloud Run Functions serverless endpoint
 
 Set env var
 
