@@ -21,7 +21,7 @@ RUN python3 -m pip install -U 'mineru[core]' --break-system-packages && \
     python3 -m pip cache purge
 
 # Download models and update the configuration file
-RUN /bin/bash -c "mineru-models-download -s huggingface -m all"
+RUN /bin/bash -c "mineru-models-download -s huggingface -m pipeline"
 
 # Install runpod
 RUN pip install --no-cache-dir runpod

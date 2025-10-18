@@ -53,7 +53,7 @@ def handler(event):
         # Parse with MinerU
         print("Processing PDF with MinerU...")
         Path(output_dir).mkdir(parents=True, exist_ok=True)
-        subprocess.run(['mineru', '-p', pdf_local, '-o', output_dir], check=True)
+        subprocess.run(['mineru', '--source', 'local', '--backend', 'pipeline', '-p', pdf_local, '-o', output_dir], check=True)
 
         # Create zip with all parsed files
         print("Creating zip file...")
