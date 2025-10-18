@@ -1,13 +1,4 @@
-import uuid
-import subprocess
-import zipfile
-import os
-import shutil
-from google.cloud import storage
-from pathlib import Path
-from datetime import datetime
 import modal
-import tempfile
 
 BUCKET_NAME = "mineru-temp-data"
 
@@ -18,9 +9,19 @@ image = modal.Image.from_registry("alexcrist/mineru-serverless:latest")
     image=image,
     gpu="T4",
     timeout=600,
-    secrets=[modal.Secret.from_name("gcp-credentials")],
+    secrets=[modal.Secret.from_name("googlecloud-secret")],
 )
 def process_pdf(input_path: str):
+    import uuid
+    import subprocess
+    import zipfile
+    import os
+    import shutil
+    from google.cloud import storage
+    from pathlib import Path
+    from datetime import datetime
+    import tempfile
+
     print("Loading credentials...")
     creds_json = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS_JSON')
     if creds_json:

@@ -1,6 +1,6 @@
 # MinerU Serverless
 
-Runs MinerU on Cloud FUnctions using Docker
+Runs MinerU on serverless using Docker
 
 ## Getting started
 
@@ -32,9 +32,7 @@ Push to docker hub
 docker push alexcrist/mineru-serverless
 ```
 
-### Google Cloud Run Functions
-
-Create a Google Cloud Run Functions serverless endpoint
+### Other
 
 Set env var
 
