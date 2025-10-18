@@ -2,7 +2,7 @@ import modal
 
 BUCKET_NAME = "mineru-temp-data"
 
-app = modal.App("mineru-parser")
+app = modal.App("mineru")
 image = modal.Image.from_dockerfile("./Dockerfile")
 
 @app.function(
@@ -50,7 +50,7 @@ def process_pdf(input_path: str):
         pdf_blob.download_to_filename(pdf_local)
 
         print("Runing MinerU...")
-        subprocess.run(['mineru', '--source', 'local', '--backend', 'pipeline', '-p', pdf_local, '-o', output_dir], check=True)
+        subprocess.run(['mineru', '--source', 'local', '--backend', 'vlm-transformers', '-p', pdf_local, '-o', output_dir], check=True)
 
         print("Zipping output...")
         with zipfile.ZipFile(zip_local, 'w') as zf:
@@ -71,9 +71,3 @@ def process_pdf(input_path: str):
         if os.path.exists(work_dir):
             shutil.rmtree(work_dir)
         print("Cleaned up.")
-
-@app.local_entrypoint()
-def main():
-    input_path = "2021_International_Residential_Code_Chapter_3_Page_8_Images.pdf"
-    result = process_pdf.remote(input_path)
-    print(result)
