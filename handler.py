@@ -74,6 +74,5 @@ def process_pdf(input_path: str):
 
 @app.local_entrypoint()
 def main(input_path: str):
-    print("Entrypoint")
     result = process_pdf.remote(input_path)
     print(result)
