@@ -53,7 +53,7 @@ def process_pdf(input_path: str):
     print("Initializing MinerU...")
     os.environ["MINERU_MODEL_SOURCE"] = MODEL_SOURCE
     os.environ["MINERU_DEVICE_MODE"] = DEVICE_MODE
-    os.environ["MINERU_VIRTUAL_VRAM_SIZE"] = round(get_vram(DEVICE_MODE))
+    os.environ["MINERU_VIRTUAL_VRAM_SIZE"] = str(round(get_vram(DEVICE_MODE)))
 
     print("Setting up work dir...")
     work_dir = f"/tmp/{id}"
