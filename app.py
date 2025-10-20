@@ -5,15 +5,21 @@ PARSING_BACKEND = "vlm-transformers"
 DEVICE_MODE = "cuda"
 MODEL_SOURCE = "local"
 GPU_OPTIONS = {
+    "L4": {
+        "name": "L4",
+        "vram_gb": 24,
+        "dollars_per_second": 0.000222,
+    },
     "L40S": {
         "name": "L40S",
         "vram_gb": 48,
-    }
+        "dollars_per_second": 0.000542,
+    },
 }
 
 # Resource config
-GPU = GPU_OPTIONS["L40S"]
-MEMORY_GB = 8
+GPU = GPU_OPTIONS["L4"]
+MEMORY_GB = 4
 CPU_CORES = 2
 
 
