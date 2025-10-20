@@ -1,7 +1,7 @@
 import modal
 
 BUCKET_NAME = "mineru-temp-data"
-PARSING_BACKEND = "vlm-vllm"
+PARSING_BACKEND = "vlm-vllm-engine"
 
 app = modal.App("mineru")
 image = modal.Image.from_dockerfile("./Dockerfile")
