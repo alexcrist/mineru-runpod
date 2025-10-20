@@ -18,7 +18,7 @@ image = modal.Image.from_dockerfile("./Dockerfile")
 @app.function(
     image=image,
     gpu=GPU_OPTIONS["L40S"],
-    cpus=4.0,
+    cpu=4.0,
     memory=32768,  # 32 GB
     timeout=600,
     secrets=[modal.Secret.from_name("googlecloud-secret")],
