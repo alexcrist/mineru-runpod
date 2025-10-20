@@ -6,6 +6,9 @@ PARSING_BACKEND = "vlm-transformers"
 app = modal.App("mineru")
 image = modal.Image.from_dockerfile("./Dockerfile")
 
+DEVICE_MODE = "cuda"
+MODEL_SOURCE = "local"
+
 
 @app.function(
     image=image,
@@ -14,15 +17,17 @@ image = modal.Image.from_dockerfile("./Dockerfile")
     secrets=[modal.Secret.from_name("googlecloud-secret")],
 )
 def process_pdf(input_path: str):
-    import uuid
-    import zipfile
     import os
     import shutil
-    from google.cloud import storage
-    from pathlib import Path
-    from datetime import datetime
     import tempfile
+    import uuid
+    import zipfile
+    from datetime import datetime
+    from pathlib import Path
+
+    from google.cloud import storage
     from mineru.cli.common import do_parse, read_fn
+    from mineru.utils.model_utils import get_vram
 
     print("Loading credentials...")
     creds_json = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_JSON")
@@ -37,6 +42,11 @@ def process_pdf(input_path: str):
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     id = f"{timestamp}_{str(uuid.uuid4())[:5]}"
     print(f"ID={id}")
+
+    print("Initializing MinerU...")
+    os.environ["MINERU_MODEL_SOURCE"] = MODEL_SOURCE
+    os.environ["MINERU_DEVICE_MODE"] = DEVICE_MODE
+    os.environ["MINERU_VIRTUAL_VRAM_SIZE"] = round(get_vram(DEVICE_MODE))
 
     print("Setting up work dir...")
     work_dir = f"/tmp/{id}"
@@ -78,7 +88,6 @@ def process_pdf(input_path: str):
         print(f"Running MinerU on {len(pdf_files)} PDF(s)...")
 
         # Use do_parse to handle all PDFs at once
-        os.environ['MINERU_MODEL_SOURCE'] = "local"
         do_parse(
             output_dir=output_dir,
             pdf_file_names=file_name_list,
