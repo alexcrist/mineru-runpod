@@ -5,11 +5,17 @@ PARSING_BACKEND = "vlm-transformers"
 DEVICE_MODE = "cuda"
 MODEL_SOURCE = "local"
 GPU_OPTIONS = {
-    "T4": "T4",  # $0.000164 / sec
-    "L4": "L4",  # $0.000222 / sec
-    "A10": "A10",  # $0.000306 / sec
-    "L40S": "L40S",  # $0.000542 / sec
+    "L40S": {
+        "name": "L40S",
+        "vram_gb": 48,
+    }
 }
+
+# Resource config
+GPU = GPU_OPTIONS["L40S"]
+MEMORY_GB = 8
+CPU_CORES = 2
+
 
 app = modal.App("mineru")
 image = modal.Image.from_dockerfile("./Dockerfile")
@@ -17,9 +23,9 @@ image = modal.Image.from_dockerfile("./Dockerfile")
 
 @app.function(
     image=image,
-    gpu=GPU_OPTIONS["L40S"],
-    cpu=4.0,
-    memory=32768,  # 32 GB
+    gpu=GPU["name"],
+    cpu=CPU_CORES,
+    memory=MEMORY_GB * 1024,
     timeout=600,
     secrets=[modal.Secret.from_name("googlecloud-secret")],
 )
@@ -34,7 +40,6 @@ def process_pdf(input_path: str):
 
     from google.cloud import storage
     from mineru.cli.common import do_parse, read_fn
-    from mineru.utils.model_utils import get_vram
 
     print("Loading credentials...")
     creds_json = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_JSON")
@@ -53,7 +58,7 @@ def process_pdf(input_path: str):
     print("Initializing MinerU...")
     os.environ["MINERU_MODEL_SOURCE"] = MODEL_SOURCE
     os.environ["MINERU_DEVICE_MODE"] = DEVICE_MODE
-    os.environ["MINERU_VIRTUAL_VRAM_SIZE"] = str(round(get_vram(DEVICE_MODE)))
+    os.environ["MINERU_VIRTUAL_VRAM_SIZE"] = str(GPU["vram_gb"])
 
     print("Setting up work dir...")
     work_dir = f"/tmp/{id}"
