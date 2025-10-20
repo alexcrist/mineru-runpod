@@ -1,7 +1,7 @@
 import modal
 
 BUCKET_NAME = "mineru-temp-data"
-PARSING_BACKEND = "vlm-transformers"
+PARSING_BACKEND = "vlm-vllm-engine"
 DEVICE_MODE = "cuda"
 MODEL_SOURCE = "local"
 GPU_OPTIONS = {
@@ -18,7 +18,7 @@ GPU_OPTIONS = {
 }
 
 # Resource config
-GPU = GPU_OPTIONS["L4"]
+GPU = GPU_OPTIONS["L40S"]
 MEMORY_GB = 4
 CPU_CORES = 2
 
