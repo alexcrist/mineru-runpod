@@ -1,11 +1,12 @@
-import modal
-import zipfile
 import os
-from pathlib import Path
-from google.cloud import storage
 import tempfile
 import uuid
+import zipfile
 from datetime import datetime
+from pathlib import Path
+
+import modal
+from google.cloud import storage
 
 # Get the path to the test directory
 TEST_DIR = Path(__file__).parent
@@ -111,9 +112,9 @@ def main():
             if len(file_list) > 10:
                 print(f"  ... and {len(file_list) - 10} more")
 
-        print(f"\nTest completed successfully!")
+        print("\nTest completed successfully!")
         print(f"Output extracted to: {output_extract_dir}")
-        print(f"Note: Temporary files will be cleaned up automatically")
+        print("Note: Temporary files will be cleaned up automatically")
 
 
 if __name__ == "__main__":

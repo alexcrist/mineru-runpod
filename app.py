@@ -2,12 +2,11 @@ import modal
 
 BUCKET_NAME = "mineru-temp-data"
 PARSING_BACKEND = "vlm-transformers"
+DEVICE_MODE = "cuda"
+MODEL_SOURCE = "local"
 
 app = modal.App("mineru")
 image = modal.Image.from_dockerfile("./Dockerfile")
-
-DEVICE_MODE = "cuda"
-MODEL_SOURCE = "local"
 
 
 @app.function(
