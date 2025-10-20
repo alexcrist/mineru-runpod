@@ -15,6 +15,7 @@ TEST_DIR = Path(__file__).parent
 TEST_PDF_FILES = [
     str(TEST_DIR / "2021_International_Residential_Code_Chapter_3_Page_1.pdf"),
     str(TEST_DIR / "2021_International_Residential_Code_Chapter_3_Page_8_Images.pdf"),
+    str(TEST_DIR / "2021_International_Residential_Code_Chapter_3.pdf"),
 ]
 
 BUCKET_NAME = "mineru-temp-data"
