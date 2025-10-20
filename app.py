@@ -4,6 +4,12 @@ BUCKET_NAME = "mineru-temp-data"
 PARSING_BACKEND = "vlm-transformers"
 DEVICE_MODE = "cuda"
 MODEL_SOURCE = "local"
+GPU_OPTIONS = {
+    "T4": "T4",  # $0.000164 / sec
+    "L4": "L4",  # $0.000222 / sec
+    "A10": "A10",  # $0.000306 / sec
+    "L40S": "L40S",  # $0.000542 / sec
+}
 
 app = modal.App("mineru")
 image = modal.Image.from_dockerfile("./Dockerfile")
@@ -11,7 +17,9 @@ image = modal.Image.from_dockerfile("./Dockerfile")
 
 @app.function(
     image=image,
-    gpu="T4",
+    gpu=GPU_OPTIONS["L40S"],
+    cpus=4.0,
+    memory=32768,  # 32 GB
     timeout=600,
     secrets=[modal.Secret.from_name("googlecloud-secret")],
 )
