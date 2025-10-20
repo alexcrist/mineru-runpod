@@ -1,7 +1,7 @@
 import modal
 
 BUCKET_NAME = "mineru-temp-data"
-PARSING_BACKEND = "vlm-vllm-engine"
+PARSING_BACKEND = "vlm-transformers"
 
 app = modal.App("mineru")
 image = modal.Image.from_dockerfile("./Dockerfile")
@@ -78,6 +78,7 @@ def process_pdf(input_path: str):
         print(f"Running MinerU on {len(pdf_files)} PDF(s)...")
 
         # Use do_parse to handle all PDFs at once
+        os.environ['MINERU_MODEL_SOURCE'] = "local"
         do_parse(
             output_dir=output_dir,
             pdf_file_names=file_name_list,
