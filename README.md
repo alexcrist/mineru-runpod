@@ -45,26 +45,36 @@ GOOGLE_APPLICATION_CREDENTIALS_JSON='{ ... }'
 Deploy app
 
 ```bash
-modal deploy app.py --name mineru --tag 0.0.x
+modal deploy app.py --name mineru
 ```
 
-### venv
+### Testing
 
-Create and activate venv
+#### Go into test dir
+
+```bash
+cd test
+```
+
+#### Set up venv
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-Install deps
+#### Install deps
 
 ```bash
 pip install modal
 pip install google-cloud-storage
 ```
 
-### Testing
+#### Add gcs-key.json file to `test/` dir
+
+Create a Google Cloud service account and put the JSON secret file in the `test/` dir
+
+#### Run test file
 
 ```bash
 python3 test.py
