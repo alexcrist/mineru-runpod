@@ -15,7 +15,6 @@ image = modal.Image.from_dockerfile("./Dockerfile")
 )
 def process_pdf(input_path: str):
     import uuid
-    import subprocess
     import zipfile
     import os
     import shutil
@@ -23,6 +22,7 @@ def process_pdf(input_path: str):
     from pathlib import Path
     from datetime import datetime
     import tempfile
+    from mineru.cli.common import do_parse, read_fn
 
     print("Loading credentials...")
     creds_json = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_JSON")
@@ -63,30 +63,32 @@ def process_pdf(input_path: str):
         if not pdf_files:
             raise ValueError("No PDF files found in the input zip")
 
-        # Process each PDF
+        # Prepare file names and bytes for batch processing
+        file_name_list = []
+        pdf_bytes_list = []
+        lang_list = []
+
         for pdf_file in pdf_files:
-            pdf_name = pdf_file.stem  # Get filename without extension
-            print(f"Processing {pdf_file.name}...")
+            file_name = pdf_file.stem
+            pdf_bytes = read_fn(pdf_file)
+            file_name_list.append(file_name)
+            pdf_bytes_list.append(pdf_bytes)
+            lang_list.append("en")  # Default language
 
-            # Create a subdirectory for this PDF's output
-            pdf_output_dir = f"{output_dir}/{pdf_name}"
-            Path(pdf_output_dir).mkdir(parents=True, exist_ok=True)
+        print(f"Running MinerU on {len(pdf_files)} PDF(s)...")
 
-            print(f"Running MinerU on {pdf_file.name}...")
-            subprocess.run(
-                [
-                    "mineru",
-                    "--source",
-                    "local",
-                    "--backend",
-                    PARSING_BACKEND,
-                    "-p",
-                    str(pdf_file),
-                    "-o",
-                    pdf_output_dir,
-                ],
-                check=True,
-            )
+        # Use do_parse to handle all PDFs at once
+        do_parse(
+            output_dir=output_dir,
+            pdf_file_names=file_name_list,
+            pdf_bytes_list=pdf_bytes_list,
+            p_lang_list=lang_list,
+            backend=PARSING_BACKEND,
+            parse_method="auto",
+            server_url=None,
+            start_page_id=0,
+            end_page_id=None,
+        )
 
         print("Zipping output...")
         with zipfile.ZipFile(zip_local, "w") as zf:
