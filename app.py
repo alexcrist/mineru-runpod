@@ -1,7 +1,7 @@
 import modal
 
 BUCKET_NAME = "mineru-temp-data"
-PARSING_BACKEND = "vlm-vllm-engine"
+PARSING_BACKEND = "vlm-transformers"
 DEVICE_MODE = "cuda"
 MODEL_SOURCE = "local"
 GPU_OPTIONS = {
@@ -19,12 +19,16 @@ GPU_OPTIONS = {
 
 # Resource config
 GPU = GPU_OPTIONS["L40S"]
-MEMORY_GB = 4
-CPU_CORES = 2
+MEMORY_GB = 16
+CPU_CORES = 4
 
 
 app = modal.App("mineru")
 image = modal.Image.from_dockerfile("./Dockerfile")
+
+# TODO: improve container speed by running MinerU model init step during image build
+# * See https://modal.com/docs/guide/images#run-a-python-function-during-your-build-with-run_function
+# * See https://github.com/opendatalab/MinerU/blob/752f75ad8e00e9addcec80ed219c6138405e5476/mineru/backend/vlm/vlm_analyze.py#L30
 
 
 @app.function(

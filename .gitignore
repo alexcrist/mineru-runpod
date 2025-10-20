@@ -4,4 +4,4 @@
 __pycache__
 .ruff_cache
 gcs-key.json
-test/output_*.zip
+test/output_*
