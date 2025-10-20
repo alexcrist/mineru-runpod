@@ -45,7 +45,7 @@ GOOGLE_APPLICATION_CREDENTIALS_JSON='{ ... }'
 Deploy app
 
 ```bash
-modal deploy app.py --name mineru --tag 0.0.1
+modal deploy app.py --name mineru --tag 0.0.x
 ```
 
 ### venv
