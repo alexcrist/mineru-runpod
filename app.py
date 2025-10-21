@@ -1,7 +1,7 @@
 import modal
 
 BUCKET_NAME = "mineru-temp-data"
-PARSING_BACKEND = "vlm-vllm"
+PARSING_BACKEND = "vlm-vllm-engine"
 DEVICE_MODE = "cuda"
 MODEL_SOURCE = "local"
 GPU_OPTIONS = {
