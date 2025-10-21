@@ -23,12 +23,62 @@ MEMORY_GB = 16
 CPU_CORES = 4
 
 
-app = modal.App("mineru")
-image = modal.Image.from_dockerfile("./Dockerfile")
+def cache_model():
+    """
+    This function runs during the image build process.
+    It calls the main `do_parse` function with a sample PDF and
+    all outputs disabled. This forces the underlying vLLM engine
+    to load, compile, and be snapshotted into the image.
+    """
+    import os
 
-# TODO: improve container speed by running MinerU model init step during image build
-# * See https://modal.com/docs/guide/images#run-a-python-function-during-your-build-with-run_function
-# * See https://github.com/opendatalab/MinerU/blob/752f75ad8e00e9addcec80ed219c6138405e5476/mineru/backend/vlm/vlm_analyze.py#L30
+    from mineru.cli.common import do_parse
+
+    print("Setting environment for model caching...")
+    os.environ["MINERU_MODEL_SOURCE"] = MODEL_SOURCE
+    os.environ["MINERU_DEVICE_MODE"] = DEVICE_MODE
+    os.environ["MINERU_VIRTUAL_VRAM_SIZE"] = str(GPU["vram_gb"])
+
+    # Read the local PDF we copied into the image
+    sample_pdf_path = "/root/sample.pdf"
+    print(f"Reading sample PDF from {sample_pdf_path}...")
+    with open(sample_pdf_path, "rb") as f:
+        sample_pdf_bytes = f.read()
+
+    print("Initializing backend with `do_parse` to bake into image...")
+    try:
+        do_parse(
+            output_dir="/tmp/dummy-output",
+            pdf_file_names=["sample"],
+            pdf_bytes_list=[sample_pdf_bytes],
+            p_lang_list=["en"],
+            backend=PARSING_BACKEND,
+            parse_method="auto",
+            server_url=None,
+            start_page_id=0,
+            end_page_id=None,
+        )
+    except Exception as e:
+        print(f"Error running MinerU 'do_parse' during initialization. ({e})")
+
+    print("Backend initialized and baked.")
+
+
+app = modal.App("mineru")
+
+image = (
+    modal.Image.from_dockerfile("./Dockerfile")
+    .add_local_file(
+        local_path="./test/2021_International_Residential_Code_Chapter_3_Page_1.pdf",
+        remote_path="/root/sample.pdf",
+        copy=True,
+    )
+    .run_function(
+        cache_model,
+        gpu=GPU["name"],
+        timeout=1000,
+    )
+)
 
 
 @app.function(
