@@ -11,4 +11,4 @@ cd ..
 source .venv/bin/activate
 
 # Run test.py
-modal deploy app.py --name mineru
+poetry run modal deploy app.py --name mineru
